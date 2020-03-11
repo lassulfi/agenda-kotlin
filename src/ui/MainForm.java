@@ -11,6 +11,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -32,6 +33,9 @@ public class MainForm extends JFrame {
 	private JLabel labelContactsCount;
 	
 	private ContactBusiness mContactBusiness;
+	
+	private String mName = "";
+	private String mPhone = "";
 	
 	public MainForm() {
 		
@@ -126,7 +130,12 @@ public class MainForm extends JFrame {
 			
 				@Override
 				public void valueChanged(ListSelectionEvent e) {
-					// TODO Auto-generated method stub
+					if(e.getValueIsAdjusting()) {
+						if(tableContacts.getSelectedRow() != -1) {
+							mName = tableContacts.getValueAt(tableContacts.getSelectedRow(), 0).toString();
+							mPhone = tableContacts.getValueAt(tableContacts.getSelectedRow(), 1).toString();							
+						}
+					}
 					
 				}
 		});
@@ -135,6 +144,16 @@ public class MainForm extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				try {
+					mContactBusiness.delete(mName, mPhone);
+					loadContacts();
+					
+					mName = "";
+					mPhone = "";
+					
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(new JFrame(), ex.getMessage());
+				}
 				
 			}
 		});
